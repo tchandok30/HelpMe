@@ -1,0 +1,101 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff0f0 0%, #ffe6ea 100%);
+}
+
+.container {
+  text-align: center;
+  background: white;
+  padding: 3rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(255, 0, 51, 0.15);
+  max-width: 400px;
+  width: 90%;
+  border: 1px solid rgba(255, 0, 51, 0.1);
+}
+
+h1 {
+  color: #d1002c;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+p {
+  color: #666;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+#sos-btn {
+  background-color: #ff0033;
+  color: white;
+  border: none;
+  padding: 1.2rem 2.5rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 0, 51, 0.3);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 250px;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#sos-btn:hover {
+  background-color: #d1002c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 0, 51, 0.4);
+}
+
+#sos-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(255, 0, 51, 0.3);
+}
+
+#sos-btn::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% {
+      left: -50%;
+  }
+  20%, 100% {
+      left: 150%;
+  }
+}
+
+.warning {
+  margin-top: 2rem;
+  padding: 0.8rem;
+  background-color: #fff3cd;
+  border-radius: 8px;
+  color: #856404;
+  font-size: 0.9rem;
+}
+
+.emergency-contacts {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: #555;
+}
