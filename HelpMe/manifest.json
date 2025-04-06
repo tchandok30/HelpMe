@@ -1,16 +1,21 @@
 {
-    "name": "HelpMe",
-    "short_name": "HelpMe",
-    "start_url": ".",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#ff4d4d",
-    "icons": [
-      {
-        "src": "https://img.icons8.com/emoji/96/sos-button-emoji.png",
-        "sizes": "96x96",
-        "type": "image/png"
-      }
-    ]
-  }
-  
+  "name": "HelpMe SOS App",
+  "short_name": "HelpMe",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#fff5f5",
+  "theme_color": "#d00000",
+  "description": "Send SOS alerts with auto-recording & emergency contact",
+  "icons": [
+    {
+      "src": "3325437_458738-PFWZHQ-65.jpg",
+      "sizes": "192x192",
+      "type": "image/jpg"
+    },
+    {
+      "src": "14658292_2011.i211.029_loudspeaker megaphone lightnings realistic (3).jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    }
+  ]
+}
