@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>HelpMe SOS App</title>
-  <!-- <link rel="stylesheet" href="style.css"> -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#d00000" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -24,41 +25,16 @@
       color: white;
     }
     button:hover { background: #900; }
-    #alerts {
-      margin-top: 30px;
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      width: 90%;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: left;
-    }
-    .alert-item {
-      padding: 10px 0;
-      border-bottom: 1px solid #ccc;
-    }
-    .alert-item:last-child {
-      border-bottom: none;
-    }
   </style>
 </head>
 <body>
   <h1>🚨 HelpMe SOS App</h1>
   <button id="sos-button">Send SOS</button>
-  <button id="view-alerts">View SOS Alerts</button>
   <button id="contact-emergency">Contact Emergency</button>
-
-  <div id="alerts">
-    <h3>📋 Past Alerts:</h3>
-    <div id="alerts-container"></div>
-  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
 
     const firebaseConfig = {
@@ -74,7 +50,6 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // 🎥 Auto Record Surroundings (Audio or Video)
     async function startRecordingAndUpload() {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
@@ -92,13 +67,12 @@
         mediaRecorder.start();
         setTimeout(() => {
           mediaRecorder.stop();
-        }, 10000); // Record for 10 seconds
+        }, 10000);
       } catch (e) {
         console.error("🎥 Recording failed: ", e);
       }
     }
 
-    // 🆘 SOS Trigger
     async function triggerSOS(reason) {
       if (!navigator.geolocation) {
         alert("Geolocation not supported.");
@@ -126,22 +100,6 @@
       });
     }
 
-    // 🧠 Smart Shake Trigger
-    let lastShake = 0;
-    window.addEventListener('devicemotion', (event) => {
-      const acc = event.acceleration;
-      if (!acc) return;
-
-      const total = Math.abs(acc.x) + Math.abs(acc.y) + Math.abs(acc.z);
-      const now = Date.now();
-
-      if (total > 30 && now - lastShake > 2000) {
-        lastShake = now;
-        triggerSOS("Phone Shake Detected!");
-      }
-    });
-
-    // 📞 Contact Emergency Options
     document.getElementById("contact-emergency").addEventListener("click", () => {
       const phone = "112";
       const smsBody = "🚨 I need urgent help! My location: ";
@@ -165,46 +123,30 @@
       });
     });
 
-    // 🚨 Manual SOS
     document.getElementById("sos-button").addEventListener("click", () => {
       triggerSOS("Manual SOS");
     });
 
-    // 📋 View Alerts
-    document.getElementById("view-alerts").addEventListener("click", async () => {
-      const container = document.getElementById("alerts-container");
-      container.innerHTML = "<p>Loading...</p>";
+    let lastShake = 0;
+    window.addEventListener('devicemotion', (event) => {
+      const acc = event.acceleration;
+      if (!acc) return;
 
-      try {
-        const snapshot = await getDocs(collection(db, "sos-alerts"));
-        if (snapshot.empty) {
-          container.innerHTML = "<p>No alerts found.</p>";
-          return;
-        }
+      const total = Math.abs(acc.x) + Math.abs(acc.y) + Math.abs(acc.z);
+      const now = Date.now();
 
-        let html = "";
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const loc = data.location
-            ? `📍 <a href="https://maps.google.com/?q=${data.location.lat},${data.location.lng}" target="_blank">
-                (${data.location.lat.toFixed(2)}, ${data.location.lng.toFixed(2)})
-              </a>` : "";
-          html += `
-            <div class="alert-item">
-              <strong>${new Date(data.timestamp).toLocaleString()}</strong><br>
-              ${data.message}<br>
-              ${loc}
-            </div>
-          `;
-        });
-
-        container.innerHTML = html;
-      } catch (err) {
-        container.innerHTML = "<p>❌ Error fetching alerts.</p>";
-        console.error(err);
+      if (total > 30 && now - lastShake > 2000) {
+        lastShake = now;
+        triggerSOS("Phone Shake Detected!");
       }
     });
 
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log("✅ Service Worker registered", reg))
+        .catch(err => console.error("❌ Service Worker failed", err));
+    }
   </script>
 </body>
 </html>
